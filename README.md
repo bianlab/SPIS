@@ -148,7 +148,7 @@ python segementation.py
 ```
 
 ### 4.3 How to run the image-free single-pixel object detection on your data
-We have provided the optimized small-size patterns in the  `./Large-scale-single-pixel-imaging/pattern_005.mat` file. If you want to run image-free single-pixel object detection on your data, you should first put your data in the `test` folder and run `simulate.py` to generate the measurements of your data. The program will read images from the test folder, then use the network-optimized small-size pattern to sample the images and generate 2D measurements, and save them in the `./image-free-object-detection/features` folder.
+We have provided the optimized small-size patterns in the  `./image-free-object-detection/pattern_005.mat` file. If you want to run image-free single-pixel object detection on your data, you should first put your data in the `test` folder and run `simulate.py` to generate the measurements of your data. The program will read images from the test folder, then use the network-optimized small-size pattern to sample the images and generate 2D measurements, and save them in the `./image-free-object-detection/features` folder.
 
 First, generate measurements:
 ```
