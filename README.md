@@ -60,7 +60,7 @@ cd ./image-free-segmentation
 Then, run the following command:
 
 ```
-python segementation.py
+python segmentation.py
 ```
 SPIS segmentation results will be saved in the `./image-free-segmentation/results` folder
 
@@ -85,7 +85,7 @@ SPIS reconstruction results will be saved in the `./Large-scale-single-pixel-ima
 
 ![图片1](./images/1.png)
 
-#### 3.2.2 Expected output of image-free single-pixel segementation
+#### 3.2.2 Expected output of image-free single-pixel segmentation
 The image-free single-pixel segmentation results will be saved in the `./image-free-segmentation/results` folder.
 
 ![图片1](./images/2.png)
@@ -122,9 +122,9 @@ python simulate.py
 ```
 Then, segment the scene:
 ```
-python segementation.py
+python segmentation.py
 ```
-The pre-trained model we provide is trained on the WBC dataset, and it can only segment white blood cells. If you want to test SPIS on other segementation data, you need to retrain SPIS. First, remove the comment from line 191 in `net/UDLSSPI005_step1.py`. Then, put your training and testing data in the `data` folder and replace the original WBC dataset according to the original file structure. Then run  `trainUDL005_step1.py ` to start the first training stage.
+The pre-trained model we provide is trained on the WBC dataset, and it can only segment white blood cells. If you want to test SPIS on other segmentation data, you need to retrain SPIS. First, remove the comment from line 191 in `net/UDLSSPI005_step1.py`. Then, put your training and testing data in the `data` folder and replace the original WBC dataset according to the original file structure. Then run  `trainUDL005_step1.py ` to start the first training stage.
 
 ```
 python trainUDL005_step1.py
@@ -142,9 +142,9 @@ Next, put your data in the `test` folder and run `simulate.py` to generate the m
 ```
 python simulate.py
 ```
-At last, run the image-free snle-pixel segementation on your data:
+At last, run the image-free snle-pixel segmentation on your data:
 ```
-python segementation.py
+python segmentation.py
 ```
 
 ### 4.3 How to run the image-free single-pixel object detection on your data
