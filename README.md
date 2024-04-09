@@ -22,7 +22,7 @@ conda activate SPIS
 conda install pytorch=1.11 torchvision cudatoolkit=11.3 -c pytorch
 ```
 
-**Setup mmedit with SPIS**
+**Clone the SPIS repository**
 ```
 git clone https://github.com//SPIS.git
 cd SPIS
@@ -53,7 +53,7 @@ SPIS reconstruction results will be saved in the `./Large-scale-single-pixel-ima
 
 
 #### 3.1.2 How to run the image-free single-pixel segmentation demo
-We have provided the measurements for testing in the  `./image-free-segmentation/features` folder. You can directly run the following command in the terminal to reconstruct the image:
+We have provided the measurements for testing in the  `./image-free-segmentation/features` folder. You can directly run the following command in the terminal to segment the scene:
 ```
 cd ./image-free-segmentation
 ```
@@ -66,7 +66,7 @@ SPIS segmentation results will be saved in the `./image-free-segmentation/result
 
 
 #### 3.1.3 How to run the image-free single-pixel object detection demo
-We have provided the measurements for testing in the  `./image-free-object-detection/features` folder. You can directly run the following command in the terminal to reconstruct the image:
+We have provided the measurements for testing in the  `./image-free-object-detection/features` folder. You can directly run the following command in the terminal to detect the objects in the scene:
 ```
 cd ./image-free-object-detection
 ```
@@ -114,7 +114,7 @@ python imaging.py
 ```
 
 ### 4.2 How to run the image-free single-pixel segmentation on your data
-You can run `simulate.py`  if you want to generate the measurements by yourself. The program will read images from the test folder, then use the network-optimized small-size pattern to sample the images and generate 2D measurements, and save them in the `./image-free single-pixel segmentation/features` folder.
+You can run `simulate.py`  if you want to generate the measurements by yourself. The program will read images from the test folder, then use the network-optimized small-size pattern to sample the images and generate 2D measurements, and save them in the `./image-free-segmentation/features` folder.
 
 First, generate measurements:
 ```
@@ -138,7 +138,7 @@ After the second stage of training, assign the path of the optimal network check
 ```
 python pattern.py
 ```
-Next, put your data in the `test` folder and run `simulate.py` to generate the measurements of your data.
+Next, put your data in the `test` folder and add comments to line 191 in the `net/UDLSSPI005_step1.py` file. Then run `simulate.py` to generate the measurements of your data.
 ```
 python simulate.py
 ```
