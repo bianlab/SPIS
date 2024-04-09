@@ -87,7 +87,7 @@ model_path = './weights/UDLSSPI_STEP2.pth'
 path_step1 = './weights/UDLSSPI_STEP1.pth'
 
 # 是否保存featuremap
-saveflag = True
+saveflag = False
 
 
 # 载入网络
