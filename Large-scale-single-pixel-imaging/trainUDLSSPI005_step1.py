@@ -54,7 +54,7 @@ LR = 0.00002
 checkpoint_interval=10
 
 # 总训练epoch数
-n_epochs=800
+n_epochs=600
 
 
 def transfer_model(pretrained_file, model):

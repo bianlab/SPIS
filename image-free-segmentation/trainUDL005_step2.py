@@ -29,12 +29,12 @@ import csv
 
 """设置默认数据类型,设置显卡序号,设置torch数据类型"""
 dtype = 'float32'
-os.environ["CUDA_VISIBLE_DEVICES"] = '1'
+os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 torch.set_default_tensor_type(torch.FloatTensor)
 
 
 """训练及网络参数设置"""
-batch_size = 64
+batch_size = 8
 
 num_workers = 0
 
@@ -55,7 +55,7 @@ LR = 0.0001
 checkpoint_interval=10
 
 # 总训练epoch数
-n_epochs=800
+n_epochs=200
 
 def transfer_model(pretrained_file, model):
     '''

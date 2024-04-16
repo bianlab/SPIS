@@ -31,7 +31,7 @@ torch.set_default_tensor_type(torch.FloatTensor)
 
 
 """训练及网络参数设置"""
-batch_size = 6
+batch_size = 8
 
 num_workers = 0
 
@@ -55,7 +55,7 @@ LR = 0.00002
 checkpoint_interval=10
 
 # 总训练epoch数
-n_epochs=800
+n_epochs=400
 
 
 def transfer_model(pretrained_file, model):
