@@ -124,7 +124,7 @@ Then, segment the scene:
 ```
 python segmentation.py
 ```
-The pre-trained model we provide is trained on the WBC dataset, and it can only segment white blood cells. If you want to test SPIS on other segmentation data, you need to retrain SPIS. First, remove the comment from line 191 in `net/UDLSSPI005_step1.py`. Then, put your training and testing data in the `data` folder and replace the original WBC dataset according to the original file structure. Then run  `trainUDL005_step1.py ` to start the first training stage.
+The pre-trained model we provide is trained on the WBC dataset, and it can only segment white blood cells. If you want to test SPIS on other segmentation data, you need to retrain SPIS. First, put your training and testing data in the `data` folder and replace the original WBC dataset according to the original file structure. Then run  `trainUDL005_step1.py ` to start the first training stage.
 
 ```
 python trainUDL005_step1.py
@@ -138,7 +138,7 @@ After the second stage of training, assign the path of the optimal network check
 ```
 python pattern.py
 ```
-Next, put your data in the `test` folder and add comments to line 191 in the `net/UDLSSPI005_step1.py` file. Then run `simulate.py` to generate the measurements of your data.
+Next, put your test data in the `test` folder. Then run `simulate.py` to generate the measurements of your data.
 ```
 python simulate.py
 ```

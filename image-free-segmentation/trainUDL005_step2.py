@@ -10,7 +10,7 @@ from torch.autograd import Variable
 from torch.utils.data import DataLoader
 
 from torch.nn.modules.loss import _Loss 
-from net.UDLSSPI005_step2 import *
+from net.UDLSSPI005_step2_train import *
 #from dataset import prepare_data, Dataset
 from utils import *
 import cv2
@@ -29,12 +29,12 @@ import csv
 
 """设置默认数据类型,设置显卡序号,设置torch数据类型"""
 dtype = 'float32'
-os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+os.environ["CUDA_VISIBLE_DEVICES"] = '1'
 torch.set_default_tensor_type(torch.FloatTensor)
 
 
 """训练及网络参数设置"""
-batch_size = 8
+batch_size = 64
 
 num_workers = 0
 
@@ -49,7 +49,7 @@ pre_weights = False
 pre_weights_path = ''
 
 # 学习率
-LR = 0.0001
+LR = 0.00002
 
 # 保存权重间隔多少epoch
 checkpoint_interval=10
@@ -119,20 +119,19 @@ def sample_images(batches_done,model,X_test,y_test):
     img_sample = torch.cat((x,y), -2)
 
     # 重建图像保存路径
-    save_image(img_sample, "%s/%s.png" % ('results/results005/results005step2/recon', batches_done), nrow=5, normalize=True)
+    save_image(img_sample, "%s/%s.png" % ('results/results005', batches_done), nrow=5, normalize=True)
 
 
 """主要训练过程"""
 def main():
 
     # 训练数据集路径以及载入训练数据集
-    path='./data/train/input/'
+    path='./data/Train/input/'
     training_x=[]
     path_list = os.listdir(path)
     path_list.sort(key=lambda x:int(x.split('.')[0]))
     for item in path_list:
         imgx= cv2.imread(path+item,0)
-        #imgx=cv2.cvtColor(imgx,cv2.COLOR_BGR2RGB)
         imgx=cv2.resize(imgx,(256,256))
         imgx=imgx/255.0
         training_x.append(imgx)
@@ -148,13 +147,12 @@ def main():
 
 
 
-    path='./data/train/mask/'
+    path='./data/Train/mask/'
     training_y=[]
     path_list = os.listdir(path)
     path_list.sort(key=lambda x:int(x.split('.')[0]))
     for item in path_list:
         imgy= cv2.imread(path+item,0)
-        #imgy=cv2.cvtColor(imgy,cv2.COLOR_BGR2RGB)
         imgx=cv2.resize(imgy,(256,256))
         imgy=imgy/255.0
         training_y.append(imgy)
@@ -171,14 +169,13 @@ def main():
 
 
     # 测试数据集路径以及载入测试数据集
-    path='./data/test/input/'
+    path='./data/Test/input/'
     test_x=[]
     path_list = os.listdir(path)
     path_list.sort(key=lambda x:int(x.split('.')[0]))
 
     for item in path_list:
         imgx= cv2.imread(path+item,0)
-        #imgx=cv2.cvtColor(imgx,cv2.COLOR_BGR2RGB)
         imgx=cv2.resize(imgx,(256,256))
         imgx=imgx/255.0
         test_x.append(imgx)
@@ -193,14 +190,13 @@ def main():
     X_test=X_test.permute(0,3,1,2)
 
 
-    path='./data/test/mask/'
+    path='./data/Test/mask/'
     test_y=[]
     path_list = os.listdir(path)
     path_list.sort(key=lambda x:int(x.split('.')[0]))
 
     for item in path_list:
         imgy= cv2.imread(path+item,0)
-        #imgy=cv2.cvtColor(imgy,cv2.COLOR_BGR2RGB)
         imgy=cv2.resize(imgy,(256,256))
         imgy=imgy/255.0
         test_y.append(imgy)
@@ -218,7 +214,7 @@ def main():
 
 
     # 训练集转为dataloader，设置batchsize和numwork
-    dataset = dataf.TensorDataset(X_train,y_train)
+    dataset = dataf.TensorDataset(X_train,Y_train)
     loader = dataf.DataLoader(dataset, batch_size=batch_size, shuffle=True,num_workers=num_workers)
 
     # 载入网络
@@ -268,11 +264,11 @@ def main():
 
         # 保存权重
         if checkpoint_interval != -1 and epoch % checkpoint_interval == 0:
-            torch.save(model.state_dict(), "saved_models_005/saved_models_005step2/SPOD_%d_psnr%d.pth" % (epoch,psnr_train))
+            torch.save(model.state_dict(), "saved_models_005/saved_models_005/SPOD_step2_%d_psnr%d.pth" % (epoch,psnr_train))
 
         # 输出测试用例
         if  (epoch+1) % 1 == 0:    
-            sample_images(epoch,model,X_test,y_test)
+            sample_images(epoch,model,X_test,Y_test)
 
 
 

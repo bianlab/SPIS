@@ -178,7 +178,7 @@ class LSSPI_one(nn.Module):
         net.apply(init_func)
 
     def forward(self, x):
-        #x = self.FeatureMap(x)
+        x = self.FeatureMap(x)
 
         x = self.bn(x)
         x = self.relu(x)

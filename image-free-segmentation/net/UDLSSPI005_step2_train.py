@@ -10,7 +10,7 @@ import numpy as np
 from torch.nn import ModuleList
 from torch.nn import Conv2d
 from torch.nn import LeakyReLU
-from net.UDLSSPI005_step1 import LSSPI_one
+from net.UDLSSPI005_step1_train import LSSPI_one
 import torch.nn as nn
 import torch
 import random

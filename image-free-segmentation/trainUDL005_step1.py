@@ -9,7 +9,7 @@ from torch.autograd import Variable
 from torch.utils.data import DataLoader
 
 from torch.nn.modules.loss import _Loss 
-from net.UDLSSPI005_step1 import *
+from net.UDLSSPI005_step1_train import *
 from utils import *
 from losses import calc_loss, dice_loss, threshold_predictions_v,threshold_predictions_p
 import cv2
@@ -48,7 +48,7 @@ pre_weights = False
 #pre_weights_path = './saved_models_005/saved_models_005step0/SPOD_350_psnr18.pth'
 pre_weights_path=False
 
-# 学习率
+# 学习率 0.0001or0.00002
 LR = 0.00002
 
 # 保存权重间隔多少epoch
@@ -121,23 +121,22 @@ def sample_images(batches_done,model,X_test,y_test):
     img_sample = torch.cat((x,y), -2)
 
     # 重建图像保存路径
-    save_image(img_sample, "%s/%s.png" % ('results/results005/results005step1/recon', batches_done), nrow=5, normalize=True)
+    save_image(img_sample, "%s/%s.png" % ('results/results005', batches_done), nrow=5, normalize=True)
 
     # 不确定性图保存路径
-    save_image(var, "%s/%s.png" % ('results/results005/results005step1/var', batches_done), nrow=5, normalize=True)
+    #save_image(var, "%s/%s.png" % ('results/results005/results005step1/var', batches_done), nrow=5, normalize=True)
 
 
 """主要训练过程"""
 def main():
 
     # 训练数据集路径以及载入训练数据集
-    path='./data/train/input/'
+    path='./data/Train/input/'
     training_x=[]
     path_list = os.listdir(path)
     path_list.sort(key=lambda x:int(x.split('.')[0]))
     for item in path_list:
         imgx= cv2.imread(path+item,0)
-        #imgx=cv2.cvtColor(imgx,cv2.COLOR_BGR2RGB)
         imgx=cv2.resize(imgx,(256,256))
         imgx=imgx/255.0
         training_x.append(imgx)
@@ -154,13 +153,12 @@ def main():
 
 
 
-    path='./data/train/mask/'
+    path='./data/Train/mask/'
     training_y=[]
     path_list = os.listdir(path)
     path_list.sort(key=lambda x:int(x.split('.')[0]))
     for item in path_list:
         imgy= cv2.imread(path+item,0)
-        #imgy=cv2.cvtColor(imgy,cv2.COLOR_BGR2RGB)
         imgy=cv2.resize(imgy,(256,256))
         imgy=imgy/255.0
         training_y.append(imgy)
@@ -178,14 +176,13 @@ def main():
 
 
     # 测试数据集路径以及载入测试数据集
-    path='./data/test/input/'
+    path='./data/Test/input/'
     test_x=[]
     path_list = os.listdir(path)
     path_list.sort(key=lambda x:int(x.split('.')[0]))
 
     for item in path_list:
         imgx= cv2.imread(path+item,0)
-        #imgx=cv2.cvtColor(imgx,cv2.COLOR_BGR2RGB)
         imgx=cv2.resize(imgx,(256,256))
         imgx=imgx/255.0
         test_x.append(imgx)
@@ -201,14 +198,13 @@ def main():
     X_test=X_test.permute(0,3,1,2)
 
 
-    path='./data/test/mask/'
+    path='./data/Test/mask/'
     test_y=[]
     path_list = os.listdir(path)
     path_list.sort(key=lambda x:int(x.split('.')[0]))
 
     for item in path_list:
         imgy= cv2.imread(path+item,0)
-        #imgy=cv2.cvtColor(imgy,cv2.COLOR_BGR2RGB)
         imgy=cv2.resize(imgy,(256,256))
         imgy=imgy/255.0
         test_y.append(imgy)
@@ -274,11 +270,11 @@ def main():
         # 保存权重
         #if checkpoint_interval != -1 and epoch % checkpoint_interval == 0:
         if psnr_train>psnr:
-        	psnr=psnr_train
-        	torch.save(model.state_dict(), "weights/saved_models_005step1/SPIS_%d_psnr%d.pth" % (epoch,psnr_train)) #要改
+        	psnr = psnr_train
+        	torch.save(model.state_dict(), "weights/saved_models_005/SPIS_step1_%d_psnr%d.pth" % (epoch,psnr_train))
         
         # 输出测试用例
-        if  (epoch+1) % 1 == 0:    
+        if (epoch+1) % 1 == 0:    
             sample_images(epoch,model,X_test,Y_test)
 
 
