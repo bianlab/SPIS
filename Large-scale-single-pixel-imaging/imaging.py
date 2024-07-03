@@ -1,5 +1,5 @@
 from torchvision.utils import save_image
-from net.UDLSSPI005_step2 import *
+from net.UDLSSPI1k_step2 import *
 from utils import *
 import cv2
 from torch.autograd import Variable
@@ -31,10 +31,10 @@ def recon_images(model,feature_path):
 feature_path = './features/features.mat'
 
 # 模型权重
-model_path = './weights/UDLSSPI_STEP2.pth'
+model_path = './weights/UDLSSPI1k_step2.pth'
 
 # step1权重
-path_step1 = './weights/UDLSSPI_STEP1.pth'
+path_step1 = './weights/UDLSSPI1k_step1.pth'
 
 
 # 载入网络
@@ -42,7 +42,7 @@ net = LSSPI_two(path=path_step1)
 model = net.cuda()
 model.load_state_dict(torch.load(model_path, map_location = device))
 print('load succesful')
-print('Sampling Rate: 5%; Reconstruction Resolution: 512*512.')
+print('Sampling Rate: 3%; Reconstruction Resolution: 1024*1024.')
 
     
 # 重建

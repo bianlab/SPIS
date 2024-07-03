@@ -1,5 +1,5 @@
 from torchvision.utils import save_image
-from net.UDLSSPI005_step2 import *
+from net.UDLSSPI1k_step2 import *
 from utils import *
 import cv2
 from torch.autograd import Variable
@@ -34,24 +34,32 @@ def featuremap(pattern_path,image_path,featuremap_img,featuremap_mat,saveflag):
     for item in path_list:
         features = []
         name = os.path.splitext(item)[0]
-        imgx = cv2.imread(image_path + item,0)
-        imgx = cv2.resize(imgx, [512, 512])
-        imgx = imgx/255.0
+        imgx = cv2.imread(image_path + item)
+        imgx = cv2.cvtColor(imgx,cv2.COLOR_BGR2RGB)
+        imgx = cv2.resize(imgx, [1024, 1024])
+        #imgx = imgx/255.0
+
+        # 拆分为RGB三个通道
+        r, g, b = cv2.split(imgx)
 
         # 卷积过程
         for i in range(len(data)):
             pattern = data[i, :, :, :]
-
-            imgrlt = conv(pattern,imgx)
-            print(imgrlt.shape)
+            patternr = pattern[0, :,:]
+            patterng = pattern[1, :,:]
+            patternb = pattern[2, :,:]
+            b1 = conv(patternb, b)
+            g1 = conv(patterng, g)
+            r1 = conv(patternr, r)
+            imgrlt = (r1 + g1 + b1)/255.0
             for j in range(len(imgrlt)):
                 imgout = imgrlt[j, :, :]
-                imgout = imgout[0]
+                #imgout = imgout[0]
                 featurex.append(np.sum(imgrlt[j]))
-                if len(featurex) == 16:
+                if len(featurex) == 32:
                     featurey.append(featurex)
                     featurex = []
-                    if len(featurey) == 16:
+                    if len(featurey) == 32:
                         features.append(featurey)
                         featurey = []
                 if saveflag:
@@ -78,13 +86,13 @@ featuremap_img = './featuremap'
 featuremap_mat = './features/features.mat'
 
 # pattern路径
-pattern_path = "./pattern/pattern_005.mat"
+pattern_path = "./pattern/pattern_1k.mat"
 
 # 模型权重
-model_path = './weights/UDLSSPI_STEP2.pth'
+model_path = './weights/UDLSSPI1k_step2.pth'
 
 # step1权重
-path_step1 = './weights/UDLSSPI_STEP1.pth'
+path_step1 = './weights/UDLSSPI1k_step1.pth'
 
 # 是否保存featuremap
 saveflag = False
@@ -95,7 +103,7 @@ net = LSSPI_two(path=path_step1)
 model = net.cuda()
 model.load_state_dict(torch.load(model_path, map_location = device))
 print('load succesful')
-print('Sampling Rate: 5%; Reconstruction Resolution: 512*512.')
+print('Sampling Rate: 3%; Reconstruction Resolution: 1024*1024.')
 
     
 # 重建
