@@ -11,11 +11,13 @@ import cv2
 """设置默认数据类型,设置torch数据类型"""
 dtype = 'float32'
 torch.set_default_tensor_type(torch.FloatTensor)
-device = 'cuda'
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 """重建图像"""
 def featuremap(pattern_path,image_path,featuremap_img,featuremap_mat,saveflag):
-
+    # 确保输出目录存在
+    os.makedirs(os.path.dirname(featuremap_mat), exist_ok=True)
+    
     featurey = []
     featurex = []
     featuremat = []
@@ -100,7 +102,10 @@ saveflag = False
 
 # 载入网络
 net = LSSPI_two(path=path_step1)
-model = net.cuda()
+if torch.cuda.is_available():
+    model = net.cuda()
+else:
+    model = net
 model.load_state_dict(torch.load(model_path, map_location = device))
 print('load succesful')
 print('Sampling Rate: 3%; Reconstruction Resolution: 1024*1024.')

@@ -5,22 +5,27 @@ import cv2
 from torch.autograd import Variable
 import scipy.io
 import numpy as np
+import os
 
 """设置默认数据类型,设置torch数据类型"""
 dtype = 'float32'
 torch.set_default_tensor_type(torch.FloatTensor)
-device = 'cuda'
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 """重建图像"""
 def recon_images(model,feature_path):
     SPIS=model
     SPIS.eval()
+    # 创建结果保存目录
+    os.makedirs('results', exist_ok=True)
     dict_ = scipy.io.loadmat(feature_path)
     features = dict_['data']
     #print(features.dtype())
     #print(features.shape)
     for i in range(len(features)):
-        feature = torch.from_numpy(features[i].astype(np.float32)).unsqueeze(0).cuda()
+        feature = torch.from_numpy(features[i].astype(np.float32)).unsqueeze(0)
+        if torch.cuda.is_available():
+            feature = feature.cuda()
         output = SPIS(feature)
         img = output[0].data
         save_image(img, "%s/%s.jpg" % ('results', i), nrow=5, normalize=True)
@@ -39,7 +44,10 @@ path_step1 = './weights/UDLSSPI1k_step1.pth'
 
 # 载入网络
 net = LSSPI_two(path=path_step1)
-model = net.cuda()
+if torch.cuda.is_available():
+    model = net.cuda()
+else:
+    model = net
 model.load_state_dict(torch.load(model_path, map_location = device))
 print('load succesful')
 print('Sampling Rate: 3%; Reconstruction Resolution: 1024*1024.')

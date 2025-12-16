@@ -10,7 +10,7 @@ from features import *
 #设置默认数据类型，设置显卡序号，设置torch数据类型
 dtype = 'float32'
 torch.set_default_tensor_type(torch.FloatTensor)
-device = 'cuda'
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 """重建相关参数"""
 
 # 模型权重
@@ -27,15 +27,22 @@ recon_path = './results'
 
 # 载入网络
 net = LSSPI_two(path=model_path)
-model = net.cuda()
+if torch.cuda.is_available():
+    model = net.cuda()
+else:
+    model = net
 print('load succesful')
 
 def image_free_segement(model, feature_path,item):
     SPIS=model
     SPIS.eval()
+    # 创建结果保存目录
+    os.makedirs('results', exist_ok=True)
     dict_ = scipy.io.loadmat(feature_path)
     features = dict_['data']
-    feature=torch.FloatTensor(features).unsqueeze(0).cuda()
+    feature=torch.FloatTensor(features).unsqueeze(0)
+    if torch.cuda.is_available():
+        feature = feature.cuda()
     print(feature.shape)
     output = SPIS(feature)
     img = F.sigmoid(output[0].data)
